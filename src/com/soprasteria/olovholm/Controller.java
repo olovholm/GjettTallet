@@ -28,32 +28,28 @@ public class Controller {
             view.printCursor();
             NumberEvaluation eval = NumberEvaluation.NOT_VALID;
 
-            if (model.getNumberOfGuesses() != CRAZY_ROUND && eval == NumberEvaluation.NOT_VALID) {
+
+            /*Trigger evaluation of number - either regular og crazy */
+            if (model.getNumberOfGuesses() == CRAZY_ROUND) {
+                eval = model.shenanigans(this.getNumber());
+            } else {
                 eval = model.evaluateNumber(this.getNumber());
+            }
+
+            /* Print the evaluation of the results */
+             if (eval == NumberEvaluation.CORRECT_GUESS) {
+                view.printEval(eval);
+                 eval = model.confirmCorrectGuess(this.getNumber());
+                 if(eval == NumberEvaluation.CORRECT_GUESS_CONFIRMED) {
+                     view.printEval(eval);
+                     exit = true;
+                 }
+            } else if (eval == NumberEvaluation.TOO_MANY_GUESSES || eval == NumberEvaluation.CORRECT_TOO_MANY_GUESSES || eval == NumberEvaluation.CORRECT_GUESS_CONFIRMED) {
+                exit = true;
                 view.printEval(eval);
             } else {
-                eval = model.shenanigans(this.getNumber());
-                view.printEval(eval);
-            }
-
-
-             if (eval == NumberEvaluation.CORRECT_GUESS) {
-                view.printCorrectBeforeConfirmed();
-                 eval = model.confirmCorrectGuess(this.getNumber());
-            }
-
-
-            if (eval == NumberEvaluation.TOO_MANY_GUESSES || eval == NumberEvaluation.CORRECT_TOO_MANY_GUESSES || eval == NumberEvaluation.CORRECT_GUESS_CONFIRMED) {
-                exit = true;
-
-                 if (eval == NumberEvaluation.CORRECT_TOO_MANY_GUESSES) {
-                    view.printCloseButNoSigar();
-
-                } else if (eval == NumberEvaluation.CORRECT_GUESS_CONFIRMED) {
-                    view.printHurrayHurray();
-
-                }
-            }
+                 view.printEval(eval);
+             }
         }
     }
 
@@ -64,7 +60,6 @@ public class Controller {
             return myint;
         } catch (InputMismatchException e){
             keyboard.nextLine();
-            view.printWrongInputMessage();
         }
         return -999;
     }

@@ -39,7 +39,7 @@ public class Model {
         secretNumber = number;
     }
 
-   //TODO Noe fungerer ikke så godt mellom denne og kontrollere. Finn ut hvorfor
+
     public NumberEvaluation confirmCorrectGuess(int number){
         if (number == secretNumber){
             return NumberEvaluation.CORRECT_GUESS_CONFIRMED;
